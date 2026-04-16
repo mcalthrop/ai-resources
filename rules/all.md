@@ -6,4 +6,3 @@
 @pull-requests.md
 @conventional-commits.md
 @conventional-branch-names.md
-@post-merge.md
