@@ -12,7 +12,7 @@ Run the following steps after a pull request has been merged:
 1. Fetch and prune remote-tracking branches:
 
    ```sh
-   git fetch --prune
+   git fetch --all --prune --prune-tags
    ```
 
 2. Switch to the main branch:
@@ -24,13 +24,13 @@ Run the following steps after a pull request has been merged:
 3. Delete the local branch for the merged PR:
 
    ```sh
-   git branch -d <branch-name>
+   git branch -D <branch-name>
    ```
 
 4. Pull the latest changes from main:
 
    ```sh
-   git pull
+   git pull origin main
    ```
 
 5. Install packages using the appropriate package manager for the repo (e.g. `pnpm install`, `npm install`, `yarn install`, `pip install -r requirements.txt`).
