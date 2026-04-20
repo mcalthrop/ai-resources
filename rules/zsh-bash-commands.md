@@ -1,7 +1,5 @@
 # Running Commands with the `bash` shell
 
-Always use long-form CLI flags (e.g. `--directory` not `-C`, `--strip-components` not its short form) so commands are self-documenting.
-
 When running commands in the `bash` shell:
 
 ```sh
