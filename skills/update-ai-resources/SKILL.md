@@ -31,7 +31,7 @@ if git show-ref --verify --quiet refs/heads/chore/update-ai-resources; then
     exit 1
   }
 fi
-git worktree add "${WORKTREE_PATH}" -b chore/update-ai-resources origin/main
+git worktree add -b chore/update-ai-resources "${WORKTREE_PATH}" origin/main
 ```
 
 3. Download the latest snapshot into a temp directory, then replace `ai-resources/` inside the worktree:

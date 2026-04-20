@@ -54,7 +54,7 @@ if git show-ref --verify --quiet refs/heads/fix/security-vulnerabilities; then
     exit 1
   }
 fi
-git worktree add "${WORKTREE_PATH}" -b fix/security-vulnerabilities origin/main
+git worktree add -b fix/security-vulnerabilities "${WORKTREE_PATH}" origin/main
 ```
 
 5. For each vulnerable package identified in the audit output, update it to the minimum safe version using the appropriate command. Run all subsequent commands from within `${WORKTREE_PATH}`.
