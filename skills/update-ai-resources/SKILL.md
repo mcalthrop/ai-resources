@@ -18,7 +18,7 @@ Download the latest snapshot of ai-resources from GitHub and commit the update o
 ```bash
 git checkout -b chore/update-ai-resources
 curl -L https://github.com/mcalthrop/ai-resources/archive/refs/heads/main.tar.gz \
-  | tar -xz --strip-components=1 -C ai-resources
+  | tar -xz --strip-components=1 --directory ai-resources
 ```
 
 3. Check whether anything changed:
