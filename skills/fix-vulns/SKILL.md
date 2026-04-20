@@ -1,40 +1,64 @@
 ---
 name: fix-vulns
-description: Check for vulnerabilities with pnpm audit and raise a PR to fix them. Use when the user asks to "fix vulnerabilities", "fix vulns", "audit dependencies", or "fix security issues".
+description: Check for vulnerabilities with an audit command and raise a PR to fix them. Use when the user asks to "fix vulnerabilities", "fix vulns", "audit dependencies", or "fix security issues".
 disable-model-invocation: true
 allowed-tools: Bash, Read, Edit
 ---
 
 # fix-vulns
 
-Check for `pnpm` dependency vulnerabilities and raise a PR that addresses all of them.
+Check for dependency vulnerabilities and raise a PR that addresses all of them.
 
 ## Instructions
 
-1. Run the audit:
+1. Detect the package manager by checking for lock files in the current working directory:
+
+   - `pnpm-lock.yaml` → `pnpm`
+   - `yarn.lock` → `yarn`
+   - `package-lock.json` → `npm`
+
+   If none is found, report that no recognised lock file was found and stop.
+
+2. Run the audit:
 
 ```bash
-zsh -i -c "pnpm audit"
+$SHELL -i -c "<package-manager> audit"
 ```
 
-2. If no vulnerabilities are found, report that and stop.
+3. If no vulnerabilities are found, report that and stop.
 
-3. If vulnerabilities are found, fetch the latest `main` and create a branch:
+4. If vulnerabilities are found, fetch the latest `main` and create a branch:
 
 ```bash
 git fetch origin main
 git checkout -b fix/security-vulnerabilities origin/main
 ```
 
-4. For each vulnerable package identified in the audit output, update it to the minimum safe version:
+5. For each vulnerable package identified in the audit output, update it to the minimum safe version:
 
 ```bash
-zsh -i -c "pnpm update <package-name>"
+$SHELL -i -c "<package-manager> <update-command> <package-name>"
 ```
 
-If the required safe version exceeds the current semver range in `package.json`, update the range in `package.json` first, then run `pnpm update <package-name>`.
+Where `<update-command>` is:
 
-For transitive (indirect) dependencies that cannot be updated directly, add a `pnpm.overrides` entry in `package.json` to force the minimum safe version across the entire dependency tree:
+| Package manager | Update command |
+| --------------- | -------------- |
+| `pnpm`          | `update`       |
+| `yarn`          | `upgrade`      |
+| `npm`           | `update`       |
+
+If the required safe version exceeds the current semver range in `package.json`, update the range in `package.json` first, then re-run the update command.
+
+For transitive (indirect) dependencies that cannot be updated directly, add an overrides entry in `package.json` to force the minimum safe version across the entire dependency tree:
+
+| Package manager | Key in `package.json`  |
+| --------------- | ---------------------- |
+| `pnpm`          | `pnpm.overrides`       |
+| `yarn`          | `resolutions`          |
+| `npm`           | `overrides`            |
+
+Example for `pnpm`:
 
 ```json
 {
@@ -46,23 +70,23 @@ For transitive (indirect) dependencies that cannot be updated directly, add a `p
 }
 ```
 
-Then run `pnpm install` to apply the override:
+Then run install to apply the override:
 
 ```bash
-zsh -i -c "pnpm install"
+$SHELL -i -c "<package-manager> install"
 ```
 
-5. Re-run the audit to confirm all vulnerabilities are resolved:
+6. Re-run the audit to confirm all vulnerabilities are resolved:
 
 ```bash
-zsh -i -c "pnpm audit"
+$SHELL -i -c "<package-manager> audit"
 ```
 
-6. Commit the changes:
+7. Commit the changes, staging only the lock file and `package.json`:
 
 ```bash
-git add pnpm-lock.yaml package.json
-git commit -m "fix(deps): resolve pnpm audit vulnerabilities"
+git add <lock-file> package.json
+git commit -m "fix(deps): resolve audit vulnerabilities"
 ```
 
-7. Push the branch and raise a draft PR. The PR body must list every vulnerability that was fixed, including package name, severity, and the resolution applied.
+8. Push the branch and raise a draft PR. The PR body must list every vulnerability that was fixed, including package name, severity, and the resolution applied.

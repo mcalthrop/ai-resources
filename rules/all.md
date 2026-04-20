@@ -2,7 +2,8 @@
 
 @general.md
 @cli-flags.md
-@zsh-node-commands.md
+@shell-commands.md
+@shell-style.md
 @code-organisation.md
 @pull-requests.md
 @conventional-commits.md
