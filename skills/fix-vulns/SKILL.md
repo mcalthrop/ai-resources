@@ -111,13 +111,14 @@ git add <lock-file> package.json
 git commit -m "fix(deps): resolve audit vulnerabilities"
 ```
 
-8. Push the branch from within the worktree, raise a draft PR, then remove the worktree:
+8. Push the branch from within the worktree and raise a draft PR:
 
 ```bash
 cd "${WORKTREE_PATH}"
 git push --set-upstream origin fix/security-vulnerabilities
 gh pr create --draft --title "fix(deps): resolve audit vulnerabilities" --body "..."
-git -C "$REPO_ROOT" worktree remove "${WORKTREE_PATH}"
 ```
 
 The PR body must list every vulnerability that was fixed, including package name, severity, and the resolution applied.
+
+The worktree will be removed as part of the post-merge steps.
