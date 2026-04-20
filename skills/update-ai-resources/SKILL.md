@@ -17,7 +17,7 @@ Download the latest snapshot of ai-resources from GitHub and commit the update o
 
 ```bash
 git fetch origin main
-git branch --delete --force chore/update-ai-resources 2>/dev/null || true
+git branch --delete --force chore/update-ai-resources 2>/dev/null || :
 git checkout -b chore/update-ai-resources origin/main
 ```
 
