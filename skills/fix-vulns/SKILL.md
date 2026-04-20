@@ -2,7 +2,7 @@
 name: fix-vulns
 description: Check for vulnerabilities with an audit command and raise a PR to fix them. Use when the user asks to "fix vulnerabilities", "fix vulns", "audit dependencies", or "fix security issues".
 disable-model-invocation: true
-allowed-tools: Bash, Read, Edit
+allowed-tools: Bash
 ---
 
 # fix-vulns
@@ -19,10 +19,19 @@ Check for dependency vulnerabilities and raise a PR that addresses all of them.
 
    If none is found, report that no recognised lock file was found and stop.
 
-2. Run the audit:
+   For `yarn`, also detect the major version (check the `packageManager` field in `package.json`, or run `yarn --version`) to determine whether it is Yarn Classic (v1) or Yarn Berry (v2+), as commands differ between versions.
+
+2. Run the audit using the appropriate command:
+
+| Package manager | Audit command     |
+| --------------- | ----------------- |
+| `pnpm`          | `pnpm audit`      |
+| `yarn` (v1)     | `yarn audit`      |
+| `yarn` (v2+)    | `yarn npm audit`  |
+| `npm`           | `npm audit`       |
 
 ```bash
-$SHELL -i -c "<package-manager> audit"
+"${SHELL:-/bin/sh}" -i -c "<audit-command>"
 ```
 
 3. If no vulnerabilities are found, report that and stop.
@@ -34,19 +43,18 @@ git fetch origin main
 git checkout -b fix/security-vulnerabilities origin/main
 ```
 
-5. For each vulnerable package identified in the audit output, update it to the minimum safe version:
-
-```bash
-$SHELL -i -c "<package-manager> <update-command> <package-name>"
-```
-
-Where `<update-command>` is:
+5. For each vulnerable package identified in the audit output, update it to the minimum safe version using the appropriate command:
 
 | Package manager | Update command |
 | --------------- | -------------- |
 | `pnpm`          | `update`       |
-| `yarn`          | `upgrade`      |
+| `yarn` (v1)     | `upgrade`      |
+| `yarn` (v2+)    | `up`           |
 | `npm`           | `update`       |
+
+```bash
+"${SHELL:-/bin/sh}" -i -c "<package-manager> <update-command> <package-name>"
+```
 
 If the required safe version exceeds the current semver range in `package.json`, update the range in `package.json` first, then re-run the update command.
 
@@ -73,13 +81,13 @@ Example for `pnpm`:
 Then run install to apply the override:
 
 ```bash
-$SHELL -i -c "<package-manager> install"
+"${SHELL:-/bin/sh}" -i -c "<package-manager> install"
 ```
 
 6. Re-run the audit to confirm all vulnerabilities are resolved:
 
 ```bash
-$SHELL -i -c "<package-manager> audit"
+"${SHELL:-/bin/sh}" -i -c "<audit-command>"
 ```
 
 7. Commit the changes, staging only the lock file and `package.json`:
