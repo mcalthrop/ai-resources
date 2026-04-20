@@ -2,7 +2,7 @@
 
 ## Creating a PR
 
-- ALWAYS use a git worktree for the PR branch rather than checking out directly in the current working tree. Derive the path from the repo name to avoid conflicts: `WORKTREE_PATH="${REPO_ROOT}/../${REPO_NAME}-<description>"`. First run `git fetch origin main` so `origin/main` is up to date. Then create the worktree with `git worktree add "${WORKTREE_PATH}" --branch <branch-name> origin/main`, do all work inside it, then remove it with `git worktree remove "${WORKTREE_PATH}"` after the PR is raised.
+- ALWAYS use a git worktree for the PR branch rather than checking out directly in the current working tree. Derive the path from the repo name to avoid conflicts: `WORKTREE_PATH="${REPO_ROOT}/../${REPO_NAME}-<description>"`. First run `git fetch origin main` so `origin/main` is up to date. Then create the worktree with `git worktree add -b <branch-name> "${WORKTREE_PATH}" origin/main`, do all work inside it, then remove it with `git worktree remove "${WORKTREE_PATH}"` after the PR is raised.
 - ALWAYS create pull requests in draft mode using the `--draft` flag with `gh pr create`.
 - ALWAYS show a link to the created pull request.
 
